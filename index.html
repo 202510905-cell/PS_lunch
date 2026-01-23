@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맛있는 급식 건의함 🍊</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f97416fc;       
+            --primary-dark: #c2410c;  
+            --primary-light: #fff7ed; 
+            --accent: #fbbf24;        
+            --danger: #ef4444;
+            --shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.15);
+            --radius: 24px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            margin: 0; padding: 30px; 
+            min-height: 100vh;
+            color: #431407; 
+            font-weight: 600; 
+            background: linear-gradient(135deg, #ffffff 0%, #fff1f2 30%, #ffedd5 70%, #fed7aa 100%);
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding-bottom: 50px; }
+        .hidden { display: none !important; }
+
+        /* 상단 헤더 */
+        .top-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 0; border-bottom: none; 
+        }
+
+        .header-left { display: flex; flex-direction: column; gap: 5px; }
+
+        h1 { 
+            font-size: 2rem; font-weight: 800; margin: 0; color: var(--primary); 
+            letter-spacing: -1px; text-shadow: 2px 2px 0px rgba(255,255,255,0.5);
+        }
+        
+        .subtitle { color: #9a3412; font-size: 1rem; font-weight: 700; opacity: 0.9; }
+
+        /* 중앙 텍스트 */
+        .header-center {
+            font-size: 2rem; 
+            color: #fe5000ed; 
+            font-family: 'Comic Sans MS', '맑은 고딕', cursive;
+            font-weight: 900; 
+            opacity: 0.8; 
+            transform: rotate(-2deg);
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+        }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .status-badge {
+            background-color: white; border: 2px solid var(--primary); color: var(--primary);
+            padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: none;
+        }
+        .status-badge.active { display: block; }
+
+        .btn-sm {
+            padding: 8px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; border: 2px solid #fed7aa; background: rgba(255,255,255,0.8);
+            color: #7c2d12; transition: all 0.2s; width: auto;
+        }  
+        .btn-sm:hover { background: white; border-color: var(--primary); color: var(--primary); }
+        
+        .btn { 
+            border-radius: 20px; font-weight: 800; cursor: pointer; border: none; 
+            font-size: 1.1rem; transition: transform 0.1s; width: 100%;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled {
+            opacity: 0.6; cursor: not-allowed; transform: none; background: #cbd5e1 !important; color: #64748b !important; box-shadow: none !important;
+        }
+
+        .btn-big {
+            padding: 30px; font-size: 1.5rem;
+            background: linear-gradient(to right, #f97316, #ea580c); color: white;
+            border-radius: 24px; box-shadow: 0 10px 25px rgba(234, 88, 12, 0.3);
+            margin-bottom: 30px; 
+            display: flex; justify-content: center; align-items: center;
+            position: relative;
+        }
+        .btn-big::after { 
+            content: "➔"; font-size: 1.4rem; opacity: 0.8; position: absolute; right: 30px;
+        }
+
+        .meal-row { display: flex; gap: 20px; }
+        
+        .meal-box { 
+            flex: 1; background: rgba(255,255,255,0.8); border-radius: 30px; padding: 0; 
+            text-align: center; border: 3px solid #fff;
+            box-shadow: 0 10px 20px rgba(251, 146, 60, 0.1);
+            min-height: 300px;
+            overflow: hidden; 
+            display: flex; flex-direction: column; align-items: center;
+        }
+        
+        .meal-title { 
+            width: 100%; font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); 
+            margin: 0; display: block; background: #ffedd5; 
+            padding: 15px 0; 
+            border-bottom: 2px solid white;
+        }
+
+        .meal-list {
+            width: 100%; display: flex; flex-direction: column;
+            gap: 6px; 
+            align-items: center; padding: 15px; flex-grow: 1;
+        }
+
+        .menu-item {
+            background: white; 
+            padding: 8px 15px; 
+            border-radius: 12px; width: 98%;
+            display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+            font-size: 1.1rem; color: #431407;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.7);
+            transition: transform 0.2s;
+        }
+        
+        .menu-item.side-dish {
+            flex-direction: row; align-items: flex-start;
+            background: #fffaf0; 
+        }
+        .side-dish-content {
+            flex: 1; display: flex; flex-wrap: wrap; gap: 5px; row-gap: 2px;
+            font-size: 1.05rem; line-height: 1.4; word-break: keep-all;
+        }
+
+        .menu-item:hover { transform: scale(1.01); background: #fff; border-color: var(--primary-light); }
+        .menu-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+        .card { background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: var(--radius); box-shadow: var(--shadow); border: 2px solid #fff; margin-bottom: 25px; text-align: center; }
+        h2 { font-size: 1.5rem; font-weight: 700; color: #431407; margin-bottom: 20px; }
+        .btn-primary { padding: 15px; background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2); }
+        .btn-outline { padding: 15px; background: rgba(255,255,255,0.6); border: 2px solid #fed7aa; color: #c2410c; }
+        .post { background: white; padding: 25px; margin-bottom: 15px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #fed7aa; }
+        .post-content { font-size: 1.1rem; font-weight: 600; color: #333; text-align: left; line-height: 1.6; margin-bottom: 15px; }
+        .comment-item { background: #fff7ed; padding: 15px; border-radius: 16px; margin-top: 10px; font-size: 0.95rem; text-align: left; color: #7c2d12; border-left: 5px solid var(--primary); font-weight: 600; display: flex; justify-content: space-between; }
+        .tabs-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px; margin-bottom: 15px; scrollbar-width: none; }
+        .tab { padding: 10px 18px; border-radius: 30px; background: rgba(255,255,255,0.7); color: #78350f; border: 1px solid #fed7aa; cursor: pointer; white-space: nowrap; font-weight: 700; }
+        .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        textarea, input, select { width: 100%; padding: 18px; border: 2px solid #fed7aa; border-radius: 18px; font-size: 1rem; outline: none; background: #fffaf0; font-weight: 600; }
+        #adminPw { letter-spacing: 10px; font-size: 1.8rem; text-align: center; }
+        .del-btn, .comment-del-btn { background:none; border:none; color:#cbd5e1; cursor:pointer; font-weight:800; font-size: 0.9rem; }
+        .del-btn:hover, .comment-del-btn:hover { color: var(--danger); }
+
+        /* 커스텀 셀렉트 스타일 */
+        select {
+            cursor: pointer;
+            color: #7c2d12;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23f97316%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 1rem top 50%;
+            background-size: 0.8rem auto;
+            appearance: none;
+        }
+
+        @media (max-width: 768px) {
+            .top-header { flex-direction: column; gap: 15px; text-align: center; }
+            .header-left { align-items: center; }
+            .header-center { margin: 10px 0; }
+        }
+        @media (max-width: 600px) { 
+            .meal-row { flex-direction: column; } 
+            .header-right { width: 100%; justify-content: center; }
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="modal-overlay" style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px);">
+        <div class="card" style="width: 300px; padding: 30px;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🗑️</div>
+            <h3 id="modal-title" style="margin:0 0 20px 0;">삭제 하시겠습니까?</h3>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="closeModal()">취소</button>
+                <button id="modal-confirm-btn" class="btn btn-primary" style="background:var(--danger);">삭제</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="date-delete-modal" style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(5px);">
+        <div class="card" style="width: 340px; padding: 30px;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">📅</div>
+            <h3 style="margin:0 0 10px 0; color:var(--danger);">날짜별 전체 삭제</h3>
+            <p style="margin:0 0 20px 0; font-size:0.9rem; color:#666;">지우고 싶은 날짜를 선택하세요.</p>
+            
+            <select id="date-selector" style="margin-bottom: 20px;">
+                <option value="">날짜를 불러오는 중...</option>
+            </select>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="closeDateModal()">취소</button>
+                <button id="btn-confirm-date-del" class="btn btn-primary" style="background:var(--danger);" onclick="executeDateDelete()">삭제하기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div id="section-menu">
+            <div class="top-header">
+                <div class="header-left">
+                    <h1>🍱 맛있는 급식 건의함</h1>
+                    <div class="subtitle">우리 학교 급식, 더 맛있게!</div>
+                </div>
+                <div class="header-center">by Coding Class</div>
+                <div class="header-right">
+                    <div id="status-badge" class="status-badge">🔐 선생님 로그인 중</div>
+                    <button id="main-login-btn" class="btn-sm" onclick="showSection('login')">선생님 로그인</button>
+                    <button id="main-logout-btn" class="btn-sm hidden" style="color:var(--danger); border-color:#fee2e2;" onclick="handleLogout()">로그아웃</button>
+                </div>
+            </div>
+
+            <button class="btn btn-big" onclick="showSection('board')">
+                📢 건의 게시판 입장하기
+            </button>
+
+            <div class="meal-row">
+                <div class="meal-box">
+                    <div class="meal-title">오늘의 메뉴 🍳</div>
+                    <div id="meal-today" class="meal-list">로딩 중...</div>
+                </div>
+                <div class="meal-box"> 
+                    <div class="meal-title" style="background: #fef3c7; color: #d97706;">내일의 메뉴 🍎</div>
+                    <div id="meal-tomorrow" class="meal-list">로딩 중...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-login" class="card hidden" style="margin-top: 60px; max-width: 500px; margin-left: auto; margin-right: auto;">
+            <div style="font-size: 3rem; margin-bottom: 20px;">🔐</div>
+            <h2>관리자(영양사) 로그인</h2>
+            <input type="password" id="adminPw" placeholder="●●●●" maxlength="20">
+            <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
+                <button id="btn-login-submit" class="btn btn-primary" onclick="checkLogin()">로그인</button>
+                <button class="btn btn-outline" style="border:none;" onclick="showSection('menu')">취소하고 돌아가기</button>
+            </div>
+        </div>
+
+        <div id="section-board" class="hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 0 5px;">
+                <h2 style="margin:0; font-size: 1.8rem; color: var(--primary-dark);">🗣️ 소통 게시판</h2>
+                
+                <div style="display: flex; gap: 8px;">
+                    <button id="btn-delete-date" class="btn btn-outline hidden" 
+                            style="width:auto; padding:10px 15px; margin:0; border-radius: 20px; color:var(--danger); border-color: #fecaca; font-size: 0.9rem;" 
+                            onclick="openDateDeleteModal()">
+                        🗑️ 날짜 전체 삭제
+                    </button>
+
+                    <button class="btn btn-outline" style="width:auto; padding:10px 20px; margin:0; border-radius: 30px;" onclick="showSection('menu')">🏠 홈</button>
+                </div>
+            </div>
+            
+            <div id="date-tabs" class="tabs-container"></div>
+
+            <div class="card" style="padding: 25px; text-align: left; border: 3px solid #ffedd5;">
+                <textarea id="postContent" placeholder="여기에 건의사항을 적어주세요! (예쁜 말 사용하기 🥰)"></textarea>
+                <div style="text-align: right; margin-top:15px;">
+                    <button id="btn-save-post" class="btn btn-primary" style="width:auto; padding:12px 30px;" onclick="savePost()">등록하기</button>
+                </div>
+            </div>
+            <div id="post-list"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SB_URL = 'https://zlsrofnmwynnuqkawaov.supabase.co';
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpsc3JvZm5td3lubnVxa2F3YW92Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4NTMxMzgsImV4cCI6MjA4NDQyOTEzOH0.Z3UvHZtpiKKrWiWY-pJ-T14MDj0BYxZwVoo74_fWRjI';
+        const sbClient = supabase.createClient(SB_URL, SB_KEY);
+
+        let isAdmin = false;
+        let selectedDate = new Date().toISOString().split('T')[0];
+        let availableDates = []; // 글이 있는 날짜들을 저장할 변수
+        let isProcessing = false;
+
+        window.onload = () => {
+            if (localStorage.getItem('isAdmin') === 'true') { isAdmin = true; updateLoginUI(); }
+            
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+
+            const formatDate = (d) => {
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${year}${month}${day}`;
+            };
+
+            fetchMealData("20260102", 'meal-today'); 
+            fetchMealData(formatDate(tomorrow), 'meal-tomorrow');
+        };
+
+        function saveMyId(type, id) {
+            const key = type === 'posts' ? 'my_posts' : 'my_comments';
+            const list = JSON.parse(localStorage.getItem(key) || '[]');
+            if(!list.includes(id)) list.push(id);
+            localStorage.setItem(key, JSON.stringify(list));
+        }
+
+        function isMine(type, id) {
+            const key = type === 'posts' ? 'my_posts' : 'my_comments';
+            const list = JSON.parse(localStorage.getItem(key) || '[]');
+            return list.includes(id);
+        }
+
+        function parseMenuHtml(rawMenu) {
+            const cleanMenu = rawMenu.replace(/\([0-9.]*\)/g, "").split(/<br\/>/g).map(s => s.trim()).filter(s => s);
+            let rice = [], soup = [], main = [], side = [];
+
+            cleanMenu.forEach(name => {
+                if (name.match(/밥|라이스|죽|누룽지/)) rice.push(name);
+                else if (name.match(/국|탕|찌개|스프|전골/)) soup.push(name);
+                else if (name.match(/고기|돈까스|치킨|스테이크|불고기|오리|생선|구이|조림|튀김|강정|함박|갈비|찜/)) main.push(name);
+                else side.push(name);
+            });
+
+            let html = '';
+
+            rice.forEach(item => {
+                html += `<div class="menu-item"><span class="menu-icon">🍚</span><span>${item}</span></div>`;
+            });
+            soup.forEach(item => {
+                html += `<div class="menu-item"><span class="menu-icon">🍲</span><span>${item}</span></div>`;
+            });
+            main.forEach(item => {
+                html += `<div class="menu-item"><span class="menu-icon">🍖</span><span>${item}</span></div>`;
+            });
+
+            if (side.length > 0) {
+                html += `
+                    <div class="menu-item side-dish">
+                        <span class="menu-icon">🥗</span>
+                        <div class="side-dish-content">
+                            ${side.join(', ')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        async function fetchMealData(ymd, id) {
+            const display = document.getElementById(id);
+            const url = `https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530213&MLSV_YMD=${ymd}`;
+            try {
+                const res = await fetch(url); const data = await res.json();
+                if (data.mealServiceDietInfo) {
+                    const rawMenu = data.mealServiceDietInfo[1].row[0].DDISH_NM;
+                    display.innerHTML = parseMenuHtml(rawMenu);
+                } else {
+                    display.innerHTML = `<div class="menu-item" style="justify-content:center;">급식 정보가 없습니다 😢</div>`;
+                }
+            } catch (e) { 
+                display.innerHTML = `<div class="menu-item" style="justify-content:center;">정보를 가져올 수 없어요 오류!</div>`; 
+            }
+        }
+
+        async function fetchPosts() {
+            const { data: posts } = await sbClient.from('posts').select('*').order('created_at', { ascending: false });
+            const { data: comments } = await sbClient.from('comments').select('*').order('created_at', { ascending: true });
+            
+            const dates = [...new Set(posts.map(p => p.created_at.split('T')[0]))].sort().reverse();
+            const todayStr = new Date().toISOString().split('T')[0];
+            if(!dates.includes(todayStr)) dates.unshift(todayStr);
+            
+            availableDates = dates; // 전역 변수에 날짜 저장 (삭제 팝업용)
+
+            const tabsContainer = document.getElementById('date-tabs');
+            tabsContainer.innerHTML = dates.map(d => `
+                <button class="tab ${d === selectedDate ? 'active' : ''}" onclick="changeDate('${d}')">
+                    ${d === todayStr ? '오늘' : d.slice(5)}
+                </button>
+            `).join('');
+
+            const list = document.getElementById('post-list'); 
+            list.innerHTML = "";
+
+            posts.filter(p => p.created_at.split('T')[0] === selectedDate).forEach(post => {
+                const postComments = comments ? comments.filter(c => c.post_id === post.id) : [];
+                const myPost = isMine('posts', post.id);
+
+                const div = document.createElement('div');
+                div.className = 'post';
+                div.innerHTML = `
+                    ${isAdmin || myPost ? `<button class="del-btn" style="float:right;" onclick="openDelModal('posts', ${post.id})">삭제</button>` : ""}
+                    <div class="post-content">${post.content}</div>
+                    <div id="comments-${post.id}">
+                        ${postComments.map(c => {
+                            const myComment = isMine('comments', c.id);
+                            return `
+                                <div class="comment-item">
+                                    <span><b>🍳 선생님:</b> ${c.content}</span>
+                                    ${isAdmin || myComment ? `<button class="comment-del-btn" onclick="openDelModal('comments', ${c.id})">x</button>` : ""}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    ${isAdmin ? `<div style="text-align:left; margin-top:15px; border-top:2px dashed #fed7aa; padding-top:15px;">
+                        <a href="javascript:void(0)" onclick="toggleReplyBox(${post.id})" style="font-size:0.9rem; color:var(--primary); font-weight:800; text-decoration:none;">💬 답변 달기</a>
+                        <div id="reply-box-${post.id}" class="hidden" style="margin-top:10px; display:flex; gap:8px;">
+                            <input type="text" id="reply-input-${post.id}" placeholder="답변 내용을 입력하세요..." style="flex:1;">
+                            <button id="btn-reply-${post.id}" class="btn btn-primary" style="width:auto; padding:5px 20px; font-size:0.9rem; margin:0;" onclick="addReply(${post.id})">등록</button>
+                        </div>
+                    </div>` : ""}
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function changeDate(date) { selectedDate = date; fetchPosts(); }
+
+        let deleteInfo = { table: '', id: null };
+        function openDelModal(table, id) { 
+            deleteInfo = { table, id }; 
+            document.getElementById('modal-title').innerText = table === 'posts' ? '이 글을 삭제할까요?' : '답변을 삭제할까요?';
+            document.getElementById('modal-overlay').style.display = 'flex'; 
+        }
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+        
+        document.getElementById('modal-confirm-btn').onclick = async () => {
+            await sbClient.from(deleteInfo.table).delete().eq('id', deleteInfo.id);
+            closeModal(); fetchPosts();
+        };
+
+        // ========== [새로 추가된 날짜 선택 삭제 기능] ==========
+
+        function openDateDeleteModal() {
+            if (!isAdmin) return;
+            
+            const select = document.getElementById('date-selector');
+            select.innerHTML = ''; // 초기화
+
+            // 글이 있는 날짜들만 옵션으로 추가
+            availableDates.forEach(date => {
+                const option = document.createElement('option');
+                option.value = date;
+                option.text = date + (date === selectedDate ? " (현재 보고 있는 날짜)" : "");
+                select.appendChild(option);
+            });
+
+            // 현재 보고 있는 날짜를 기본 선택
+            select.value = selectedDate;
+
+            document.getElementById('date-delete-modal').style.display = 'flex';
+        }
+
+        function closeDateModal() {
+            document.getElementById('date-delete-modal').style.display = 'none';
+        }
+
+        async function executeDateDelete() {
+            const dateToDelete = document.getElementById('date-selector').value;
+            if(!dateToDelete) return alert("삭제할 날짜를 선택해주세요.");
+
+            if (!confirm(`⚠️ 정말로 [ ${dateToDelete} ] 의 모든 글을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) {
+                return;
+            }
+
+            const btn = document.getElementById('btn-confirm-date-del');
+            const originalText = btn.innerText;
+            btn.innerText = "삭제 중...";
+            btn.disabled = true;
+
+            const startTime = `${dateToDelete}T00:00:00`;
+            const endTime = `${dateToDelete}T23:59:59`;
+
+            const { error } = await sbClient
+                .from('posts')
+                .delete()
+                .gte('created_at', startTime)
+                .lte('created_at', endTime);
+
+            if (error) {
+                alert("삭제 실패 ㅠㅠ : " + error.message);
+            } else {
+                alert(`[ ${dateToDelete} ] 의 모든 글이 삭제되었습니다.`);
+                closeDateModal();
+                fetchPosts(); // 목록 새로고침
+            }
+
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+
+        // ====================================================
+
+        async function addReply(postId) {
+            if(isProcessing) return; 
+            const input = document.getElementById(`reply-input-${postId}`);
+            const btn = document.getElementById(`btn-reply-${postId}`);
+            if(!input.value) return;
+
+            isProcessing = true; btn.innerText = "..."; btn.disabled = true;
+
+            const { data } = await sbClient.from('comments').insert([{ post_id: postId, content: input.value }]).select();
+            if(data) saveMyId('comments', data[0].id);
+
+            isProcessing = false; btn.innerText = "등록"; btn.disabled = false;
+            fetchPosts();
+        }
+
+        function toggleReplyBox(id) { document.getElementById(`reply-box-${id}`).classList.toggle('hidden'); }
+
+        async function savePost() {
+            if(isProcessing) return;
+            const content = document.getElementById('postContent').value;
+            const btn = document.getElementById('btn-save-post');
+            if(!content) return;
+
+            isProcessing = true; btn.innerText = "저장 중..."; btn.disabled = true;
+
+            const { data } = await sbClient.from('posts').insert([{ content, likes: 0 }]).select();
+            if(data) {
+                saveMyId('posts', data[0].id);
+                document.getElementById('postContent').value = "";
+                fetchPosts();
+            }
+
+            isProcessing = false; btn.innerText = "등록하기"; btn.disabled = false;
+        }
+
+        async function checkLogin() {
+            const inputPw = document.getElementById('adminPw').value;
+            const btn = document.getElementById('btn-login-submit');
+
+            if (!inputPw) return alert("비밀번호를 입력해주세요.");
+
+            btn.innerText = "확인 중...";
+            btn.disabled = true;
+
+            const { data, error } = await sbClient.rpc('match_admin_password', { input_pass: inputPw });
+
+            if (data === true) { 
+                isAdmin = true; 
+                localStorage.setItem('isAdmin', 'true'); 
+                updateLoginUI(); 
+                showSection('menu'); 
+            } else {
+                alert("비밀번호가 틀렸습니다.");
+            }
+
+            document.getElementById('adminPw').value = "";
+            btn.innerText = "로그인";
+            btn.disabled = false;
+        }
+
+        function handleLogout() { localStorage.clear(); location.reload(); }
+
+        function updateLoginUI() {
+            const badge = document.getElementById('status-badge');
+            if (isAdmin) badge.classList.add('active');
+            else badge.classList.remove('active');
+            document.getElementById('main-login-btn').classList.toggle('hidden', isAdmin);
+            document.getElementById('main-logout-btn').classList.toggle('hidden', !isAdmin);
+            
+            if(document.getElementById('btn-delete-date')) {
+                document.getElementById('btn-delete-date').classList.toggle('hidden', !isAdmin);
+            }
+        }
+
+        function showSection(name) {
+            ['section-menu', 'section-login', 'section-board'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById('section-' + name).classList.remove('hidden');
+            if(name === 'board') fetchPosts();
+        }
+    </script>
+</body>
+</html>
