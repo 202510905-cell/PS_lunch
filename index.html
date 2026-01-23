@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>맛있는 급식 건의함 </title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="logo.png">
     <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -30,7 +33,11 @@
             background: linear-gradient(135deg, #ffffff 0%, #fff1f2 30%, #ffedd5 70%, #fed7aa 100%);
             background-attachment: fixed;
         }
-
+        .byCC {
+            font-family: "Agdasima", sans-serif;
+            font-weight: 700;
+            font-style: normal;
+            }
         .container { max-width: 1000px; margin: 0 auto; padding-bottom: 50px; }
         .hidden { display: none !important; }
 
@@ -219,7 +226,7 @@
                     <h1>🍱 맛있는 급식 건의함</h1>
                     <div class="subtitle">우리 학교 급식, 더 맛있게!</div>
                 </div>
-                <div class="header-center">by Coding Class</div>
+                <div class="header-center byCC">by Coding Class</div>
                 <div class="header-right">
                     <div id="status-badge" class="status-badge">🔐 선생님 로그인 중</div>
                     <button id="main-login-btn" class="btn-sm" onclick="showSection('login')">선생님 로그인</button>
@@ -234,11 +241,11 @@
             <div class="meal-row">
                 <div class="meal-box">
                     <div class="meal-title">오늘의 메뉴 🍳</div>
-                    <div id="meal-today" class="meal-list">로딩 중...</div>
+                    <div id="meal-today" class="meal-list">오늘은 급식이 없습니다.</div>
                 </div>
                 <div class="meal-box"> 
                     <div class="meal-title" style="background: #fef3c7; color: #d97706;">내일의 메뉴 🍎</div>
-                    <div id="meal-tomorrow" class="meal-list">로딩 중...</div>
+                    <div id="meal-tomorrow" class="meal-list">오늘은 급식이 없습니다.</div>
                 </div>
             </div>
         </div>
@@ -305,7 +312,7 @@
                 return `${year}${month}${day}`;
             };
 
-            fetchMealData("20260102", 'meal-today'); 
+            fetchMealData(formateDate(today), 'meal-today'); 
             fetchMealData(formatDate(tomorrow), 'meal-tomorrow');
         };
 
