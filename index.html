@@ -314,8 +314,8 @@
                 return `${year}${month}${day}`;
             };
 
-            fetchMealData("20260102", 'meal-today'); 
-            fetchMealData("20251230", 'meal-tomorrow');
+            fetchMealData(formatDate(today), 'meal-today'); 
+            fetchMealData(formatDate(tomorrow), 'meal-tomorrow');
         };
 
         function saveMyId(type, id) {
