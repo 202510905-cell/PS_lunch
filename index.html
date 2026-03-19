@@ -236,8 +236,8 @@
                 </div>
                 <div class="header-center">by Coding Class_</div>
                 <div class="header-right">
-                    <div id="status-badge" class="status-badge">🔐 선생님 로그인 중</div>
-                    <button id="main-login-btn" class="btn-sm" onclick="showSection('login')">선생님 로그인</button>
+                    <div id="status-badge" class="status-badge">🔐영양 선생님 로그인 중</div>
+                    <button id="main-login-btn" class="btn-sm" onclick="showSection('login')">영양 선생님 로그인</button>
                     <button id="main-logout-btn" class="btn-sm hidden" style="color:var(--danger); border-color:#fee2e2;" onclick="handleLogout()">로그아웃</button>
                 </div>
             </div>
@@ -253,14 +253,14 @@
                 </div>
                 <div class="meal-box"> 
                     <div class="meal-title" style="background: #fef3c7; color: #d97706;">내일의 메뉴 🍎</div>
-                    <div id="meal-tomorrow" class="meal-list">오늘은 급식이 없습니다.</div>
+                    <div id="meal-tomorrow" class="meal-list">내일은 급식이 없습니다.</div>
                 </div>
             </div>
         </div>
 
         <div id="section-login" class="card hidden" style="margin-top: 60px; max-width: 500px; margin-left: auto; margin-right: auto;">
             <div style="font-size: 3rem; margin-bottom: 20px;">🔐</div>
-            <h2>관리자(영양사) 로그인</h2>
+            <h2>관리자(영양 선생님) 로그인</h2>
             <input type="password" id="adminPw" placeholder="●●●●" maxlength="20">
             <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
                 <button id="btn-login-submit" class="btn btn-primary" onclick="checkLogin()">로그인</button>
