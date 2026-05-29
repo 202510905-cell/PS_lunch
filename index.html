@@ -338,10 +338,10 @@
             cleanMenu.forEach(name => {
                 if (name.match(/밥|라이스|죽|누룽지/)) rice.push(name);
                 else if (name.match(/국|탕|찌개|스프|전골|라멘|육개장/)) soup.push(name);
-                else if (name.match(/고기|돈까스|치킨|스테이크|불고기|오리|생선|구이|조림|튀김|강정|함박|갈비|찜|삼겹|오겹|꼬치|까스|닭|소시지|소세지|돈|수육|새우|뿌링클|등심|카츠|까츠|제육/)) main.push(name);
+                else if (name.match(/고기|돈까스|치킨|스테이크|불고기|오리|생선|구이|조림|튀김|강정|함박|갈비|찜|삼겹|오겹|꼬치|까스|닭|소시지|소세지|돈|수육|족발|뿌링클|등심|카츠|까츠|제육/)) main.push(name);
                 else side.push(name);
             });
-
+ 
             let html = '';
             rice.forEach(item => { html += `<div class="menu-item"><span class="menu-icon">🍚</span><span>${item}</span></div>`; });
             soup.forEach(item => { html += `<div class="menu-item"><span class="menu-icon">🍲</span><span>${item}</span></div>`; });
